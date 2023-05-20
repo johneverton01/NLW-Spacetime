@@ -44,7 +44,12 @@ export async function memoriesRoutes(app: FastifyInstance) {
       return replay.status(401).send()
     }
 
-    return memory
+    return {
+      id: memory.id,
+      coverUrl: memory.coverUrl,
+      content: memory.content,
+      createdAt: memory.createAt,
+    }
   })
 
   app.post('/memories', async (request) => {

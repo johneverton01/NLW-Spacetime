@@ -1,15 +1,10 @@
 import { EmptyMemories } from '@/components/EmptyMemories'
+import { Memory } from '@/components/Memory'
 import { api } from '@/lib/api'
-import dayjs from 'dayjs'
-import ptBr from 'dayjs/locale/pt-br'
-import { ArrowRight } from 'lucide-react'
+
 import { cookies } from 'next/headers'
-import Image from 'next/image'
-import Link from 'next/link'
 
-dayjs.locale(ptBr)
-
-interface Memory {
+interface IMemory {
   id: string
   coverUrl: string
   excerpt: string
@@ -30,7 +25,7 @@ export default async function Home() {
     },
   })
 
-  const memories: Memory[] = response.data
+  const memories: IMemory[] = response.data
 
   if (memories.length === 0) {
     return <EmptyMemories />
@@ -40,29 +35,14 @@ export default async function Home() {
     <div className="flex flex-col gap-10 p-8">
       {memories.map((memory) => {
         return (
-          <div key={memory.id} className="space-y-4">
-            <time className="-ml-6 flex items-center gap-2 text-sm text-gray-100 before:h-px before:w-5 before:bg-gray-50">
-              {dayjs(memory.createdAt).format('D [de] MMMM[,] YYYY')}
-            </time>
-            <Image
-              src={memory.coverUrl}
-              alt=""
-              width={592}
-              height={280}
-              className="aspect-video w-full rounded-lg object-contain"
-            />
-            <p className="text-lg leading-relaxed text-gray-100">
-              {memory.excerpt}
-            </p>
-
-            <Link
-              href={`memories/${memory.id}`}
-              className="flex items-center gap-2 text-gray-100 transition-colors hover:text-gray-50"
-            >
-              Ler mais
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
+          <Memory
+            key={memory.id}
+            content={memory.excerpt}
+            createdAt={memory.createdAt}
+            id={memory.id}
+            coverUrl={memory.coverUrl}
+            isShowLink
+          />
         )
       })}
     </div>
